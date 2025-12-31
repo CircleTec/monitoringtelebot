@@ -46,4 +46,5 @@ ENV DATABASE_URL=/app/data/database.sqlite
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# This will push the schema changes, then start the bot
+CMD npx drizzle-kit push && npm start
