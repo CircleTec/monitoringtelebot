@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment
+.env
+.env.*
+
+# Git
+.git
+.gitignore
+
+# SQLite
+database.sqlite*
+
+# Documentation & Tasks
+README.md
+task.md
+walkthrough.md
+implementation_plan.md
+
+# Dev Scripts
+check-db.js
+test-checks.js
+update-google.js
+verify-password.js
+fix-service-type.js
+
+# Logs
+debug.log
+npm-debug.log*
+
+# Docker
+Dockerfile
+docker-compose.yml
