@@ -11,7 +11,9 @@
     "db:studio": "drizzle-kit studio",
     "db:check": "node scripts/check-db.js",
     "test:checks": "node scripts/test-checks.js",
-    "verify:pass": "node scripts/verify-password.js"
+    "verify:pass": "node scripts/verify-password.js",
+    "build": "echo 'No build step required'",
+    "run": "node src/index.js"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -28,7 +30,7 @@
     "node-telegram-bot-api": "^0.67.0"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.18.1",
+    "drizzle-kit": "^0.31.8",
     "nodemon": "^3.1.11"
   }
 }
