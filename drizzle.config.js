@@ -6,6 +6,7 @@ export default defineConfig({
     out: './drizzle',
     dialect: 'sqlite',
     dbCredentials: {
-        url: 'database.sqlite',
+        // This MUST be the absolute path to the persistent volume
+        url: '/app/data/database.sqlite',
     },
 });
