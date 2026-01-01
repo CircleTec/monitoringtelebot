@@ -22,6 +22,10 @@ async function checkServiceHttp(service) {
     const res = await axios.get(url, {
       timeout: service.timeout,
       validateStatus: () => true,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; MonitoringBot/1.0; +https://github.com/monitoring)',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      },
     });
     responseTime = Date.now() - start;
     if (res.status >= 200 && res.status < 400) {
