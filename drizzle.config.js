@@ -1,4 +1,7 @@
 import { defineConfig } from 'drizzle-kit';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 /** @type { import("drizzle-kit").Config } */
 export default defineConfig({
@@ -6,6 +9,6 @@ export default defineConfig({
     out: './drizzle',
     dialect: 'sqlite',
     dbCredentials: {
-        url: 'database.sqlite',
+        url: process.env.DATABASE_URL || './data/database.sqlite',
     },
 });

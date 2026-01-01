@@ -10,8 +10,13 @@ package-lock.json
 .git
 .gitignore
 
-# SQLite
+# SQLite (ignore database files in root, but keep data directory structure)
 database.sqlite*
+*.db
+*.sqlite
+# Keep the data directory structure
+!data/
+!data/.gitkeep
 
 # Documentation & Tasks
 README.md

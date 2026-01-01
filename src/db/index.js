@@ -1,8 +1,18 @@
 import SQLite from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import * as schema from './schema.js';
+import { mkdirSync } from 'fs';
+import { dirname } from 'path';
 
-const dbPath = process.env.DATABASE_URL || '/app/data/database.sqlite';
+const dbPath = process.env.DATABASE_URL || './data/database.sqlite';
+
+// Ensure the directory exists
+try {
+    mkdirSync(dirname(dbPath), { recursive: true });
+} catch (err) {
+    // Directory already exists or can't be created
+}
+
 const sqlite = new SQLite(dbPath);
 export const db = drizzle(sqlite, { schema });
 

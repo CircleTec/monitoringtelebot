@@ -29,6 +29,8 @@ logs/
 database.sqlite*
 *.db
 *.sqlite
+# But keep the data directory structure
+!data/.gitkeep
 
 # IDEs
 .vscode/
