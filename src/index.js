@@ -28,7 +28,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-      "script-src": ["'self'", "cdn.tailwindcss.com"], // Allow tailwind CDN for now as per user frontend
+      "script-src": ["'self'", "cdn.tailwindcss.com", "static.cloudflareinsights.com"], // Allow Tailwind CDN and Cloudflare Insights
     },
   },
 }));
