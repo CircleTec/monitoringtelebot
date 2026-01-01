@@ -1,23 +1,22 @@
-import SQLite from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
+import dotenv from 'dotenv';
+dotenv.config();
+
+import { drizzle } from 'drizzle-orm/node-postgres';
+import pkg from 'pg';
+const { Pool } = pkg;
 import * as schema from './schema.js';
-import { mkdirSync } from 'fs';
-import { dirname } from 'path';
 
-const dbPath = process.env.DATABASE_URL || './data/database.sqlite';
+const connectionString = process.env.DATABASE_URL;
 
-// Ensure the directory exists
-try {
-    mkdirSync(dirname(dbPath), { recursive: true });
-} catch (err) {
-    // Directory already exists or can't be created
+if (!connectionString) {
+    throw new Error('DATABASE_URL environment variable is required');
 }
 
-const sqlite = new SQLite(dbPath);
-export const db = drizzle(sqlite, { schema });
+const pool = new Pool({
+    connectionString,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+});
 
-// In a real app we'd use migrations, but for simplicity we can enable pragmas
-sqlite.pragma('journal_mode = WAL');
-sqlite.pragma('foreign_keys = ON');
+export const db = drizzle(pool, { schema });
 
 export default db;

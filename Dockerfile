@@ -2,13 +2,7 @@
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Install build dependencies for better-sqlite3 (Native C++ modules)
-RUN apt-get update && apt-get install -y \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
-
+# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
@@ -25,9 +19,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Create the data directory for SQLite persistence
-RUN mkdir -p /app/data
-
 # Copy files from the builder stage with correct ownership
 COPY --from=builder --chown=node:node /app/package*.json ./
 COPY --from=builder --chown=node:node /app/node_modules ./node_modules
@@ -36,19 +27,14 @@ COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/nodemon.json ./
 COPY --from=builder --chown=node:node /app/drizzle.config.js ./
 
-# Ensure the node user owns the data directory for database writes
-RUN chown -R node:node /app/data
-
 # Switch to non-root user for security
 USER node
 
 # Environment Variables
 ENV NODE_ENV=production
 ENV PORT=3000
-# Ensure the app code uses this same path for the SQLite file
-ENV DATABASE_URL=/app/data/database.sqlite
 
 EXPOSE 3000
 
-# Push schema changes to the DB file, then start the application
+# Push schema changes to the DB, then start the application
 CMD ["sh", "-c", "npx drizzle-kit push && npm start"]

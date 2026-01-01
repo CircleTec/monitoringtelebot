@@ -1,8 +1,11 @@
+// Load environment variables FIRST, before any other imports
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-import dotenv from 'dotenv';
 import { db } from './db/index.js';
 import { users } from './db/schema.js';
 import { hashPassword } from './utils/auth.js';
@@ -19,8 +22,6 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
-
-dotenv.config();
 
 const app = express();
 app.use(helmet({
