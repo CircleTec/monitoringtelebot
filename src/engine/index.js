@@ -79,7 +79,7 @@ async function checkServiceTcp(service) {
   return { status, responseTime, errorMessage };
 }
 
-async function processServiceCheck(serviceInput) {
+export async function processServiceCheck(serviceInput) {
   // CRITICAL: Fetch fresh service data to avoid stale state from closures
   const [service] = await db.select().from(services).where(eq(services.id, serviceInput.id));
 

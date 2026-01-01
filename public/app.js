@@ -80,6 +80,7 @@
         if (!servicesGrid) return;
         servicesGrid.innerHTML = services.map(s => {
             const isConfirming = deleteConfirmationState[s.id];
+            const isChecking = deleteConfirmationState[`checking_${s.id}`];
             return `
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
                 <div class="flex justify-between items-start mb-4">
@@ -104,6 +105,11 @@
                 </div>
                 <div class="flex justify-between items-center pt-4 border-t border-gray-50">
                     <div class="flex gap-2">
+                        <button data-action="check" data-id="${s.id}" 
+                            class="text-blue-600 hover:text-blue-700 text-sm font-medium px-2 py-1 ${isChecking ? 'opacity-50 cursor-not-allowed' : ''}" 
+                            ${isChecking ? 'disabled' : ''}>
+                            ${isChecking ? 'Checking...' : 'Check Now'}
+                        </button>
                         <button data-action="edit" data-service='${encodeURIComponent(JSON.stringify(s))}' 
                             class="text-purple-600 hover:text-purple-700 text-sm font-medium px-2 py-1">Edit</button>
                         <button data-action="delete" data-id="${s.id}" 
@@ -163,6 +169,35 @@
         }
     }
 
+    async function checkServiceNow(id) {
+        // Set checking state
+        deleteConfirmationState[`checking_${id}`] = true;
+        renderServices(currentServices);
+
+        try {
+            const res = await fetch(`/services/${id}/check`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                console.log('Manual check completed:', data);
+                // Refresh services to show updated status
+                await fetchServices();
+            } else {
+                alert('Failed to check service');
+            }
+        } catch (err) {
+            console.error('Error checking service:', err);
+            alert('Error checking service');
+        } finally {
+            // Clear checking state
+            delete deleteConfirmationState[`checking_${id}`];
+            renderServices(currentServices);
+        }
+    }
+
     function startPolling() {
         fetchServices();
         if (refreshInterval) clearInterval(refreshInterval);
@@ -200,6 +235,8 @@
             } else if (action === 'edit') {
                 const service = JSON.parse(decodeURIComponent(btn.getAttribute('data-service')));
                 openModal(true, service);
+            } else if (action === 'check') {
+                checkServiceNow(btn.getAttribute('data-id'));
             }
         });
 

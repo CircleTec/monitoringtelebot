@@ -4,6 +4,7 @@ import { services, serviceLogs } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
 import { authMiddleware } from '../utils/auth.js';
 import { sendAlert } from '../bot/index.js';
+import { processServiceCheck } from '../engine/index.js';
 
 const router = express.Router();
 
@@ -66,6 +67,36 @@ router.delete('/:id', async (req, res) => {
         res.json({ message: 'Service deleted' });
     } catch (err) {
         console.error(`[API] Error deleting service ID: ${serviceId}:`, err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Manual Check - Trigger immediate dual check for a service
+router.post('/:id/check', async (req, res) => {
+    const { id } = req.params;
+    const serviceId = parseInt(id);
+
+    try {
+        // Fetch the service to verify it exists
+        const [service] = await db.select().from(services).where(eq(services.id, serviceId));
+
+        if (!service) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+
+        // Trigger the dual check
+        console.log(`[API] Manual check triggered for service: ${service.name} (ID: ${serviceId})`);
+        await processServiceCheck(service);
+
+        // Fetch updated service data to return
+        const [updatedService] = await db.select().from(services).where(eq(services.id, serviceId));
+
+        res.json({
+            message: 'Check completed',
+            service: updatedService
+        });
+    } catch (err) {
+        console.error(`[API] Error during manual check for service ID ${serviceId}:`, err);
         res.status(500).json({ error: err.message });
     }
 });
