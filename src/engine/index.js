@@ -37,6 +37,7 @@ async function checkServiceHttp(service) {
     status = 'down';
     errorMessage = err.message;
     responseTime = Date.now() - start;
+    console.log(`[HTTP Check Error] ${service.name}: ${err.message} (Code: ${err.code || 'N/A'})`);
   }
 
   return { status, responseTime, errorMessage };
@@ -78,6 +79,7 @@ async function checkServiceTcp(service) {
     status = 'down';
     errorMessage = err.message;
     responseTime = Date.now() - start;
+    console.log(`[TCP Check Error] ${service.name}: ${err.message}`);
   }
 
   return { status, responseTime, errorMessage };
