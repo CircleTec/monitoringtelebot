@@ -93,7 +93,7 @@
                     </span>
                 </div>
                 <p class="text-sm text-gray-600 mb-2 truncate">${s.target}</p>
-                <div class="flex gap-3 text-xs mb-4">
+                <div class="flex gap-3 text-xs mb-2">
                     <span class="${s.lastHttpStatus === 'up' ? 'text-green-600' : 'text-red-600'}">
                         HTTP: ${s.lastHttpStatus || 'unknown'}
                         ${s.lastHttpStatus === 'down' ? `(${s.httpFailureCount}/2)` : ''}
@@ -102,6 +102,10 @@
                         TCP: ${s.lastTcpStatus || 'unknown'}
                         ${s.lastTcpStatus === 'down' ? `(${s.tcpFailureCount}/2)` : ''}
                     </span>
+                </div>
+                <div class="flex gap-3 text-xs text-gray-500 mb-4">
+                    <span title="Check interval">⏱️ ${s.interval}s</span>
+                    <span title="Timeout">⏳ ${s.timeout}ms</span>
                 </div>
                 <div class="flex justify-between items-center pt-4 border-t border-gray-50">
                     <div class="flex gap-2">
