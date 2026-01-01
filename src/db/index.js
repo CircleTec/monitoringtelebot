@@ -14,7 +14,7 @@ if (!connectionString) {
 
 const pool = new Pool({
     connectionString,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    ssl: false, // Dokploy PostgreSQL doesn't support SSL
 });
 
 export const db = drizzle(pool, { schema });
